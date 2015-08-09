@@ -28,10 +28,9 @@ endif()
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
-find_package(Qt5Multimedia REQUIRED)
-set(QT_LIBRARIES Qt5::Widgets Qt5::Multimedia Qt5::Gui Qt5::Core)
-set(QT_INCLUDES ${Qt5Widgets_INCLUDE_DIRS} ${Qt5Multimedia_INCLUDE_DIRS})
-add_definitions(${Qt5Widgets_DEFINITIONS} ${Qt5Multimedia_DEFINITIONS})
+set(QT_LIBRARIES Qt5::Widgets Qt5::Gui Qt5::Core)
+set(QT_INCLUDES ${Qt5Widgets_INCLUDE_DIRS})
+add_definitions(${Qt5Widgets_DEFINITIONS})
 get_target_property(QMAKE_EXEC Qt5::qmake LOCATION)
 
 include_directories(
@@ -132,7 +131,7 @@ if(WIN32)
 		DESTINATION . OPTIONAL)
 	# Install .ico file. No idea what purpose would this serve but some
 	# programs come with their icons in the .ico file so why not.
-	install(FILES ${CMAKE_SOURCE_DIR}/media/icon_windows.ico DESTINATION .
+	install(FILES ${CMAKE_SOURCE_DIR}/media/icon.ico DESTINATION .
 		RENAME stayfocused.ico
 	)
 	# Install MSVC runtime. Only Visual 2008 and 2013 are supported at the moment.
@@ -146,10 +145,7 @@ if(WIN32)
 	# Text files in Windows distribution really should have a .txt extension
 	# so rename them all accordingly.
 	set(LICENSE_FILES
-		LICENSE
+		LICENSE.txt
 	)
-	foreach (LICFILE ${LICENSE_FILES})
-		install(FILES "${CMAKE_SOURCE_DIR}/${LICFILE}" DESTINATION .
-			RENAME "${LICFILE}.txt")
-	endforeach(LICFILE)
+	install(FILES "${CMAKE_SOURCE_DIR}/LICENSE.txt" DESTINATION .)
 endif()
