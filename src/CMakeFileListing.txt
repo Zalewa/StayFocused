@@ -1,0 +1,23 @@
+set(UI_FILES
+	mainwindow.ui
+)
+set(HEADER_FILES
+	main.h
+	mainwindow.h
+	processlist.h
+	stayfocus.h
+	trayicon.h
+	version.h
+	versiondefs.h
+	winapi.h
+)
+set(SOURCE_FILES
+	entrypoint.cpp
+	main.cpp
+	mainwindow.cpp
+	processlist.cpp
+	stayfocus.cpp
+	trayicon.cpp
+	version.cpp
+	winapi.cpp
+)

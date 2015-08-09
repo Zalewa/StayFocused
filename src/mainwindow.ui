@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>476</width>
+    <height>185</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Stay Focused!</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../media/resources.qrc">
+    <normaloff>:/icons/icon</normaloff>:/icons/icon</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Process:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="cboProcesses"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Window:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="cboWindows"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="btnStayFocus">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>72</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Stay Focused!</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../media/resources.qrc">
+          <normaloff>:/icons/icon_64</normaloff>:/icons/icon_64</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>64</width>
+          <height>64</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>476</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="../media/resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>btnStayFocus</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>toggleFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>229</x>
+     <y>107</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>343</x>
+     <y>148</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cboProcesses</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadWindowHandlesForCurrentProcess()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>40</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>452</x>
+     <y>81</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cboProcesses</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>stopFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>427</x>
+     <y>43</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>420</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cboWindows</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>stopFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>377</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>395</x>
+     <y>120</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>toggleFocus()</slot>
+  <slot>loadWindowHandlesForCurrentProcess()</slot>
+  <slot>stopFocus()</slot>
+ </slots>
+</ui>

@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+<qresource>
+    <file alias="icons/activated_64">activated_64.png</file>
+    <file alias="icons/icon">icon.png</file>
+    <file alias="icons/icon_64">icon_64.png</file>
+</qresource>
+</RCC>

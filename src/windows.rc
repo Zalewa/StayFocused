@@ -1,0 +1,32 @@
+#define VOS_NT_WINDOWS32 0x00040004L
+#define VFT_APP 0x00000001L
+
+#include "versiondefs.h"
+
+1 VERSIONINFO
+FILEVERSION FILEVERSION_DEF
+PRODUCTVERSION PRODUCTVERSION_DEF
+FILETYPE VFT_APP
+{
+	BLOCK "StringFileInfo"
+	{
+		BLOCK "040904E4"
+		{
+			VALUE "CompanyName", "Zalewa"
+			VALUE "FileVersion", FILEVERSION_STR_DEF
+			VALUE "FileDescription", "Stay Focused!"
+			VALUE "InternalName", "stayfocused"
+			VALUE "LegalCopyright", LEGALCOPYRIGHT_DEF
+			VALUE "LegalTrademarks", ""
+			VALUE "OriginalFilename", "stayfocused.exe"
+			VALUE "ProductName", "Stay Focused!"
+			VALUE "ProductVersion", PRODUCTVERSION_STR_DEF
+		}
+	}
+	BLOCK "VarFileInfo"
+	{
+		VALUE "Translation", 0x0409, 0x04E4
+	}
+}
+
+IDI_ICON1 ICON DISCARDABLE "../media/icon.ico"
