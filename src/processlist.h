@@ -34,6 +34,9 @@ public:
     ProcessList();
     ~ProcessList();
 
+    static bool isMyHwnd(HWND hwnd);
+    static qint64 pidForHwnd(HWND hwnd);
+
     QString error() const;
     QList<ProcessEntry> listProcesses() const;
     QList<WindowEntry> listWindows(qint64 pidFilter = -1) const;

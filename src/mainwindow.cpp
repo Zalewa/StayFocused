@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include "ui_mainwindow.h"
+#include "activehwndtracker.h"
 #include "processlist.h"
 #include "stayfocus.h"
 #include "trayicon.h"
@@ -19,6 +20,7 @@ public:
     StayFocus *stayFocus;
     QTimer reloadTimer;
     TrayIcon *trayIcon;
+    ActiveHwndTracker *activeHwndTracker;
 };
 
 
@@ -38,6 +40,9 @@ MainWindow::MainWindow()
 
     this->connect(&d->reloadTimer, SIGNAL(timeout()), SLOT(loadProcesses()));
     d->reloadTimer.start(1000);
+
+    d->activeHwndTracker = new ActiveHwndTracker(this);
+
     loadProcesses();
 }
 
@@ -148,7 +153,7 @@ void MainWindow::toggleFocus()
 
 void MainWindow::startFocus()
 {
-    HWND hwnd = static_cast<HWND>(selectedWindowHandle());
+    HWND hwnd = selectedWindowHandle();
     if (hwnd == 0)
     {
         showError(tr("Select a window first."));
@@ -170,9 +175,9 @@ void MainWindow::stopFocus()
     d->stayFocus->stopFocus();
 }
 
-void* MainWindow::selectedWindowHandle() const
+HWND MainWindow::selectedWindowHandle() const
 {
-    return d->cboWindows->currentData().value<void*>();
+    return static_cast<HWND>(d->cboWindows->currentData().value<void*>());
 }
 
 void MainWindow::onFocusingChanged(bool focusing)
@@ -199,6 +204,40 @@ void MainWindow::onFocusingChanged(bool focusing)
     d->btnStayFocus->setIcon(icon);
     setWindowIcon(icon);
     emit focusingChanged(focusing);
+}
+
+void MainWindow::guessWindow()
+{
+    QList<HWND> hwnds = d->activeHwndTracker->history();
+    while (!hwnds.isEmpty())
+    {
+        HWND hwnd = hwnds.takeLast();
+        if (ProcessList::pidForHwnd(hwnd) > 0 && !ProcessList::isMyHwnd(hwnd))
+        {
+            selectWindowHandle(hwnd);
+            if (selectedWindowHandle() == hwnd)
+            {
+                statusBar()->showMessage(tr("Guessed HWND."), 2000);
+                return;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    showError(tr("Failed to guess HWND."));
+}
+
+void MainWindow::selectWindowHandle(HWND hwnd)
+{
+    qint64 pid = ProcessList::pidForHwnd(hwnd);
+    if (pid > 0)
+    {
+        d->cboProcesses->setCurrentIndex(d->cboProcesses->findData(pid));
+        // At this point windows combo box should be reloaded.
+        d->cboWindows->setCurrentIndex(d->cboWindows->findData(qVariantFromValue<void*>(hwnd)));
+    }
 }
 
 void MainWindow::showError(const QString &msg)

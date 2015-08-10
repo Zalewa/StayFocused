@@ -105,6 +105,18 @@ QList<WindowEntry> ProcessList::listWindows(qint64 pidFilter) const
     return list;
 }
 
+qint64 ProcessList::pidForHwnd(HWND hwnd)
+{
+    DWORD pid = 0;
+    GetWindowThreadProcessId(hwnd, &pid);
+    return pid;
+}
+
+bool ProcessList::isMyHwnd(HWND hwnd)
+{
+    return pidForHwnd(hwnd) == GetCurrentProcessId();
+}
+
 ///////////////////////////////////////////////////////////////////////////
 WindowEntry::WindowEntry()
 {

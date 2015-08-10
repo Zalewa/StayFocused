@@ -26,12 +26,14 @@ private:
     void setProcessesBox(const QList<ProcessEntry>&);
     void setWindowsBox(const QList<WindowEntry>&);
     qint64 selectedProcessId() const;
-    void* selectedWindowHandle() const;
+    HWND selectedWindowHandle() const;
+    void selectWindowHandle(HWND handle);
     void showMenu(QMenu *menu);
     void startFocus();
 
 private slots:
     void goToHomePage();
+    void guessWindow();
     void loadProcesses();
     void loadWindowHandlesForCurrentProcess();
     void onFocusingChanged(bool focusing);

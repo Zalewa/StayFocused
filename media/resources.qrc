@@ -5,5 +5,6 @@
     <file alias="icons/flag">flag.png</file>
     <file alias="icons/icon">icon.png</file>
     <file alias="icons/icon_64">icon_64.png</file>
+	<file alias="icons/wand">wand.png</file>
 </qresource>
 </RCC>
