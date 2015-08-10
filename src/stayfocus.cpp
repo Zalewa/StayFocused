@@ -24,7 +24,7 @@ StayFocus::StayFocus(QObject *parent)
     d = new PrivData();
     d->focusing = false;
     this->connect(&d->focusTimer, SIGNAL(timeout()), SLOT(focus()));
-    d->focusTimer.setInterval(0);
+    d->focusTimer.setInterval(500);
 }
 
 StayFocus::~StayFocus()
