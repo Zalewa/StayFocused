@@ -22,20 +22,14 @@ WindowFlags::~WindowFlags()
     delete d;
 }
 
-WindowFlags::Style WindowFlags::style() const
+FlagSet<LONG> WindowFlags::style() const
 {
-    return Style(GetWindowLong(d->hwnd, GWL_STYLE));
+    return FlagSet<LONG>(Def::StyleDef::wsStyles(), GetWindowLong(d->hwnd, GWL_STYLE));
 }
 
 void WindowFlags::setStyle(LONG flags)
 {
-    SetLastError(ERROR_SUCCESS);
-    SetWindowLong(d->hwnd, GWL_STYLE, flags);
-    if (GetLastError() == ERROR_SUCCESS)
-    {
-        SetWindowPos(d->hwnd, d->hwnd, 0, 0, 0, 0,  SWP_NOMOVE | SWP_NOSIZE
-            | SWP_NOZORDER | SWP_FRAMECHANGED);
-    }
+    Winapi::setWindowLong(d->hwnd, GWL_STYLE, flags);
 }
 
 void WindowFlags::setStyleFlags(LONG flags, bool set)
@@ -45,29 +39,12 @@ void WindowFlags::setStyleFlags(LONG flags, bool set)
     setStyle(currentFlags);
 }
 
-///////////////////////////////////////////////////////////////////////////
-
-WindowFlags::Style::Style()
+FlagSet<LONG> WindowFlags::exStyle() const
 {
-    this->flags = 0;
+    return FlagSet<LONG>(Def::StyleDef::wsExStyles(), GetWindowLong(d->hwnd, GWL_EXSTYLE));
 }
 
-WindowFlags::Style::Style(LONG flags)
+void WindowFlags::setExStyle(LONG flags)
 {
-    this->flags = flags;
-}
-
-const QMap<LONG, QString> &WindowFlags::Style::flagsDefs()
-{
-    return Def::StyleDef::defs();
-}
-
-QString WindowFlags::Style::name(LONG flag)
-{
-    return flagsDefs()[flag];
-}
-
-bool WindowFlags::Style::hasFlag(LONG flag) const
-{
-    return (this->flags & flag) != 0;
+    Winapi::setWindowLong(d->hwnd, GWL_EXSTYLE, flags);
 }

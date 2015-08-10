@@ -9,6 +9,7 @@ namespace Winapi
 {
     QString errorMessage(int error);
     QList<HWND> snapshotWindows();
+    void setWindowLong(HWND hwnd, int index, LONG value);
 }
 
 #endif

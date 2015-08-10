@@ -3,10 +3,13 @@
 #include <QGroupBox>
 #include <QPushButton>
 #include <QStatusBar>
+#include <QTimer>
 #include "flagspanel.h"
 #include "styledef.h"
 #include "windowflags.h"
 #include "ui_windowflagsbox.h"
+
+#define BAIL_ON_ERR(a) if (!a) { return; }
 
 class WindowFlagsBox::PrivData : public Ui::WindowFlagsBox
 {
@@ -14,7 +17,9 @@ public:
     HWND hwnd;
     bool immediate;
     FlagsPanel<LONG> *styleFlags;
+    FlagsPanel<LONG> *exStyleFlags;
     QStatusBar *statusBar;
+    QTimer resetTimer;
 };
 
 WindowFlagsBox::WindowFlagsBox(HWND hwnd, QWidget *parent)
@@ -26,15 +31,19 @@ WindowFlagsBox::WindowFlagsBox(HWND hwnd, QWidget *parent)
     d->statusBarLayout->addWidget(d->statusBar);
     d->hwnd = hwnd;
 
+    d->resetTimer.setInterval(200);
+    this->connect(&d->resetTimer, SIGNAL(timeout()), SLOT(reset()));
+
     this->connect(d->buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked()), SLOT(reset()));
     this->connect(d->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), SLOT(accept()));
 
-    QGroupBox *groupBox = new QGroupBox(tr("WS_ Style"), this);
-    groupBox->setLayout(new QVBoxLayout());
-    d->styleFlags = new FlagsPanel<LONG>(Def::StyleDef::defs(), d->flagsArea);
+    d->styleFlags = new FlagsPanel<LONG>(Def::StyleDef::wsStyles(), d->flagsArea);
     this->connect(d->styleFlags->signal, SIGNAL(changed()), SLOT(applyStyle()));
-    groupBox->layout()->addWidget(d->styleFlags);
-    d->flagsArea->layout()->addWidget(groupBox);
+    addFlagsBox(tr("WS styles"), d->styleFlags);
+
+    d->exStyleFlags = new FlagsPanel<LONG>(Def::StyleDef::wsExStyles(), d->flagsArea);
+    this->connect(d->exStyleFlags->signal, SIGNAL(changed()), SLOT(applyExStyle()));
+    addFlagsBox(tr("WS ex styles"), d->exStyleFlags);
 
     setImmediate(d->rbImmediate->isChecked());
     reset();
@@ -45,28 +54,56 @@ WindowFlagsBox::~WindowFlagsBox()
     delete d;
 }
 
-void WindowFlagsBox::accept()
+void WindowFlagsBox::addFlagsBox(const QString &name, QWidget *box)
 {
-    applyStyle();
+    QGroupBox *groupBox = new QGroupBox(name, this);
+    groupBox->setLayout(new QVBoxLayout());
+    groupBox->layout()->addWidget(box);
+    d->flagsArea->layout()->addWidget(groupBox);
 }
 
-void WindowFlagsBox::applyStyle()
+void WindowFlagsBox::accept()
+{
+    BAIL_ON_ERR(applyStyle());
+    BAIL_ON_ERR(applyExStyle());
+}
+
+bool WindowFlagsBox::applyStyle()
 {
     WindowFlags flags(d->hwnd);
     flags.setStyle(d->styleFlags->flags());
-    applyErrorStatus();
+    bool ok = applyErrorStatus();
+    if (d->immediate)
+    {
+        reset();
+    }
+    return ok;
 }
 
-void WindowFlagsBox::applyErrorStatus()
+bool WindowFlagsBox::applyExStyle()
+{
+    WindowFlags flags(d->hwnd);
+    flags.setExStyle(d->exStyleFlags->flags());
+    bool ok = applyErrorStatus();
+    if (d->immediate)
+    {
+        reset();
+    }
+    return ok;
+}
+
+bool WindowFlagsBox::applyErrorStatus()
 {
     int lastError = GetLastError();
     if (lastError == ERROR_SUCCESS)
     {
         d->statusBar->showMessage(tr("Flags changed."), 1000);
+        return true;
     }
     else
     {
         d->statusBar->showMessage(Winapi::errorMessage(lastError));
+        return false;
     }
 }
 
@@ -78,7 +115,12 @@ void WindowFlagsBox::setImmediate(bool immediate)
     d->styleFlags->signal->blockSignals(!immediate);
     if (immediate)
     {
+        d->resetTimer.start();
         reset();
+    }
+    else
+    {
+        d->resetTimer.stop();
     }
 }
 
@@ -86,4 +128,5 @@ void WindowFlagsBox::reset()
 {
     WindowFlags flags(d->hwnd);
     d->styleFlags->setFlags(flags.style().flags);
+    d->exStyleFlags->setFlags(flags.exStyle().flags);
 }

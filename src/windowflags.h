@@ -9,26 +9,15 @@
 class WindowFlags
 {
 public:
-    class Style
-    {
-    public:
-        Flags<LONG> flags;
-
-        Style();
-        Style(LONG flags);
-
-        static const QMap<LONG, QString> &flagsDefs();
-        static QString name(LONG flag);
-
-        bool hasFlag(LONG flag) const;
-    };
-
     WindowFlags(HWND hwnd);
     ~WindowFlags();
 
-    Style style() const;
+    FlagSet<LONG> style() const;
     void setStyle(LONG flags);
     void setStyleFlags(LONG flags, bool set);
+
+    FlagSet<LONG> exStyle() const;
+    void setExStyle(LONG flags);
 
 private:
     class PrivData;

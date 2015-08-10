@@ -14,7 +14,8 @@ class StyleDef : public QObject
     Q_OBJECT;
 
 public:
-    static const QMap<LONG, QString> &defs();
+    static const QMap<LONG, QString> &wsStyles();
+    static const QMap<LONG, QString> &wsExStyles();
 };
 
 }

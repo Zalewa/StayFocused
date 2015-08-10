@@ -19,10 +19,12 @@ private:
     class PrivData;
     PrivData *d;
 
-    void applyErrorStatus();
+    bool applyErrorStatus();
+    void addFlagsBox(const QString &name, QWidget *box);
 
 private slots:
-    void applyStyle();
+    bool applyStyle();
+    bool applyExStyle();
     void setImmediate(bool);
     void reset();
 };

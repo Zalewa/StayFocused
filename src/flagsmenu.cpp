@@ -34,7 +34,7 @@ void FlagsMenu::setup()
 void FlagsMenu::setupStyleMenu()
 {
     WindowFlags windowFlags(d->hwnd);
-    WindowFlags::Style style = windowFlags.style();
+    FlagSet<LONG> style = windowFlags.style();
     QString error;
     if (GetLastError() != ERROR_SUCCESS)
     {
@@ -45,12 +45,12 @@ void FlagsMenu::setupStyleMenu()
     if (error.isNull())
     {
         this->connect(styleMenu, SIGNAL(triggered(QAction*)), SLOT(onStyleActionTriggered(QAction*)));
-        foreach (LONG flag, WindowFlags::Style::flagsDefs().keys())
+        foreach (LONG flag, style.names.keys())
         {
-            QAction *action = styleMenu->addAction(WindowFlags::Style::name(flag));
+            QAction *action = styleMenu->addAction(style.name(flag));
             action->setData(flag);
             action->setCheckable(true);
-            action->setChecked(style.hasFlag(flag));
+            action->setChecked(style.flags.isSet(flag));
         }
     }
     else

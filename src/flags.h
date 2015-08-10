@@ -5,7 +5,10 @@ template <class T>
 class Flags
 {
 public:
-    Flags() {}
+    Flags()
+    {
+        this->flags = 0;
+    }
 
     Flags(T flags)
     {
@@ -46,6 +49,31 @@ public:
 
 private:
     T flags;
+};
+
+template<class T>
+class FlagSet
+{
+public:
+    Flags<T> flags;
+    QMap<T, QString> names;
+
+    FlagSet() {}
+    FlagSet(const QMap<T, QString> &names)
+    {
+        this->names = names;
+    }
+
+    FlagSet(const QMap<T, QString> &names, Flags<T> flags)
+    {
+        this->names = names;
+        this->flags = flags;
+    }
+
+    QString name(T flag) const
+    {
+        return names[flag];
+    }
 };
 
 #endif

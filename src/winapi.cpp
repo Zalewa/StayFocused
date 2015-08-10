@@ -29,5 +29,15 @@ QList<HWND> snapshotWindows()
     return snapshotHwnd;
 }
 
+void setWindowLong(HWND hwnd, int index, LONG value)
+{
+    SetLastError(ERROR_SUCCESS);
+    SetWindowLong(hwnd, index, value);
+    if (GetLastError() == ERROR_SUCCESS)
+    {
+        SetWindowPos(hwnd, hwnd, 0, 0, 0, 0,  SWP_NOMOVE | SWP_NOSIZE
+            | SWP_NOZORDER | SWP_FRAMECHANGED | SWP_NOACTIVATE);
+    }
+}
 
 }
