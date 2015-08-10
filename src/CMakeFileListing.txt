@@ -1,23 +1,34 @@
 set(UI_FILES
 	mainwindow.ui
+	windowflagsbox.ui
 )
 set(HEADER_FILES
+	flags.h
+	flagsmenu.h
+	flagspanel.h
 	main.h
 	mainwindow.h
 	processlist.h
 	stayfocus.h
+	styledef.h
 	trayicon.h
 	version.h
 	versiondefs.h
 	winapi.h
+	windowflags.h
+	windowflagsbox.h
 )
 set(SOURCE_FILES
 	entrypoint.cpp
+	flagsmenu.cpp
 	main.cpp
 	mainwindow.cpp
 	processlist.cpp
 	stayfocus.cpp
+	styledef.cpp
 	trayicon.cpp
 	version.cpp
 	winapi.cpp
+	windowflags.cpp
+	windowflagsbox.cpp
 )

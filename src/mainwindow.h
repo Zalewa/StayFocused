@@ -2,13 +2,14 @@
 #define id1ecba6f6_712d_436e_b086_42e2425bd5c3
 
 #include <QMainWindow>
+#include <QMenu>
 
 struct ProcessEntry;
 struct WindowEntry;
 
 class MainWindow : public QMainWindow
 {
-Q_OBJECT
+    Q_OBJECT;
 
 public:
     MainWindow();
@@ -26,6 +27,7 @@ private:
     void setWindowsBox(const QList<WindowEntry>&);
     qint64 selectedProcessId() const;
     void* selectedWindowHandle() const;
+    void showMenu(QMenu *menu);
     void startFocus();
 
 private slots:
@@ -34,6 +36,7 @@ private slots:
     void loadWindowHandlesForCurrentProcess();
     void onFocusingChanged(bool focusing);
     void showAbout();
+    void showFlagsMenu();
     void stopFocus();
     void toggleFocus();
 };

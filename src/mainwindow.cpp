@@ -5,8 +5,8 @@
 #include "stayfocus.h"
 #include "trayicon.h"
 #include "version.h"
+#include "windowflagsbox.h"
 #include <windows.h>
-#include <TlHelp32.h>
 #include <QDebug>
 #include <QDesktopServices>
 #include <QTimer>
@@ -113,6 +113,26 @@ void MainWindow::setWindowsBox(const QList<WindowEntry>& windows)
     }
 }
 
+void MainWindow::showFlagsMenu()
+{
+    if (selectedWindowHandle() != NULL)
+    {
+        auto *box = new WindowFlagsBox(static_cast<HWND>(selectedWindowHandle()), this);
+        box->setAttribute(Qt::WA_DeleteOnClose);
+        box->show();
+    }
+    else
+    {
+        showError(tr("Select a window first."));
+    }
+}
+
+void MainWindow::showMenu(QMenu *menu)
+{
+    connect(menu, SIGNAL(aboutToHide()), menu, SLOT(deleteLater()));
+    menu->popup(QCursor::pos());
+}
+
 void MainWindow::toggleFocus()
 {
     statusBar()->clearMessage();
@@ -131,7 +151,7 @@ void MainWindow::startFocus()
     HWND hwnd = static_cast<HWND>(selectedWindowHandle());
     if (hwnd == 0)
     {
-        showError(tr("Select window first."));
+        showError(tr("Select a window first."));
     }
     else
     {
