@@ -80,6 +80,7 @@ void MainWindow::setProcessesBox(const QList<ProcessEntry> &processes)
     }
     else
     {
+        d->cboWindows->clear();
         stopFocus();
     }
     d->cboProcesses->blockSignals(false);
