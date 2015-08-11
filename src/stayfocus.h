@@ -22,6 +22,10 @@ public:
     void startFocus(HWND window);
     void stopFocus();
 
+public slots:
+    void setDelay(int delay);
+    void setStealFromSameProcess(bool);
+
 signals:
     void focusingChanged(bool focusing);
 
@@ -31,10 +35,13 @@ private:
 
     void attachRemoteThreads(const QList<DWORD> &threads, bool attach);
     bool isIgnored(HWND hwnd) const;
+    bool isMyFamily(HWND hwnd) const;
+    bool isTargetFamily(HWND hwnd) const;
     QList<DWORD> listWindowsThreads();
 
 private slots:
     void snap(const HookEvent &event);
+    void focus();
 };
 
 #endif

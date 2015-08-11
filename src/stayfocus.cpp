@@ -2,6 +2,7 @@
 
 #include <windows.h>
 #include <QDebug>
+#include <QTimer>
 #include "hook.h"
 #include "mainwindow.h"
 #include "processlist.h"
@@ -14,6 +15,8 @@ public:
     bool focusing;
     HWND hwnd;
     QSet<HWND> ignore;
+    bool stealFromSameProcess;
+    QTimer delayTimer;
 };
 
 
@@ -22,10 +25,14 @@ StayFocus::StayFocus(QObject *parent)
 {
     d = new PrivData();
     d->focusing = false;
+    d->stealFromSameProcess = true;
 
     Hook *hook = new Hook(this);
     this->connect(hook, SIGNAL(activated(HookEvent)), SLOT(snap(HookEvent)));
     hook->hookEvent(EVENT_SYSTEM_FOREGROUND);
+
+    this->connect(&d->delayTimer, SIGNAL(timeout()), SLOT(focus()));
+    d->delayTimer.setSingleShot(true);
 }
 
 StayFocus::~StayFocus()
@@ -46,6 +53,16 @@ void StayFocus::clearIgnore()
 bool StayFocus::isFocusing() const
 {
     return d->focusing;
+}
+
+void StayFocus::setDelay(int delay)
+{
+    d->delayTimer.setInterval(delay);
+}
+
+void StayFocus::setStealFromSameProcess(bool b)
+{
+    d->stealFromSameProcess = b;
 }
 
 void StayFocus::startFocus(HWND hwnd)
@@ -81,7 +98,11 @@ void StayFocus::snap(const HookEvent &event)
     {
         return;
     }
+    d->delayTimer.start();
+}
 
+void StayFocus::focus()
+{
     QList<DWORD> remoteThreads = listWindowsThreads();
     attachRemoteThreads(remoteThreads, true);
     SetActiveWindow(d->hwnd);
@@ -90,7 +111,21 @@ void StayFocus::snap(const HookEvent &event)
 
 bool StayFocus::isIgnored(HWND hwnd) const
 {
-    return d->ignore.contains(hwnd) || d->hwnd == hwnd || !d->focusing;
+    if (!d->stealFromSameProcess && isTargetFamily(hwnd))
+    {
+        return true;
+    }
+    return d->ignore.contains(hwnd) || d->hwnd == hwnd || !d->focusing || isMyFamily(hwnd);
+}
+
+bool StayFocus::isMyFamily(HWND hwnd) const
+{
+    return ProcessList::isMyHwnd(hwnd);
+}
+
+bool StayFocus::isTargetFamily(HWND hwnd) const
+{
+    return ProcessList::pidForHwnd(hwnd) == ProcessList::pidForHwnd(d->hwnd);
 }
 
 QList<DWORD> StayFocus::listWindowsThreads()

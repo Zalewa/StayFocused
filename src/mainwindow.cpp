@@ -43,6 +43,10 @@ MainWindow::MainWindow()
 
     d->activeHwndTracker = new ActiveHwndTracker(this);
 
+    connect(d->cbStealFromSameProcess, SIGNAL(toggled(bool)),
+        d->stayFocus, SLOT(setStealFromSameProcess(bool)));
+    connect(d->spinDelay, SIGNAL(valueChanged(int)), d->stayFocus, SLOT(setDelay(int)));
+
     loadProcesses();
 }
 
@@ -162,6 +166,7 @@ void MainWindow::startFocus()
     {
         d->stayFocus->clearIgnore();
         d->stayFocus->addIgnore((HWND)winId());
+        d->stayFocus->setStealFromSameProcess(d->cbStealFromSameProcess->isChecked());
         d->stayFocus->startFocus(hwnd);
         if (!d->stayFocus->error().isNull())
         {
