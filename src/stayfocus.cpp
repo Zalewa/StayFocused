@@ -2,7 +2,7 @@
 
 #include <windows.h>
 #include <QDebug>
-#include <QTimer>
+#include "hook.h"
 #include "mainwindow.h"
 #include "processlist.h"
 #include "winapi.h"
@@ -13,7 +13,6 @@ public:
     QString error;
     bool focusing;
     HWND hwnd;
-    QTimer focusTimer;
     QSet<HWND> ignore;
 };
 
@@ -23,8 +22,10 @@ StayFocus::StayFocus(QObject *parent)
 {
     d = new PrivData();
     d->focusing = false;
-    this->connect(&d->focusTimer, SIGNAL(timeout()), SLOT(focus()));
-    d->focusTimer.setInterval(500);
+
+    Hook *hook = new Hook(this);
+    this->connect(hook, SIGNAL(activated(HookEvent)), SLOT(snap(HookEvent)));
+    hook->hookEvent(EVENT_SYSTEM_FOREGROUND);
 }
 
 StayFocus::~StayFocus()
@@ -58,7 +59,6 @@ void StayFocus::startFocus(HWND hwnd)
     d->error = QString();
     d->hwnd = hwnd;
     d->focusing = true;
-    d->focusTimer.start();
     if (prevState != d->focusing)
     {
         emit focusingChanged(true);
@@ -67,7 +67,6 @@ void StayFocus::startFocus(HWND hwnd)
 
 void StayFocus::stopFocus()
 {
-    d->focusTimer.stop();
     bool prevState = d->focusing;
     d->focusing = false;
     if (prevState != d->focusing)
@@ -76,9 +75,9 @@ void StayFocus::stopFocus()
     }
 }
 
-void StayFocus::focus()
+void StayFocus::snap(const HookEvent &event)
 {
-    if (d->ignore.contains(GetForegroundWindow()) || d->hwnd == GetForegroundWindow())
+    if (isIgnored(event.hwnd))
     {
         return;
     }
@@ -87,6 +86,11 @@ void StayFocus::focus()
     attachRemoteThreads(remoteThreads, true);
     SetActiveWindow(d->hwnd);
     attachRemoteThreads(remoteThreads, false);
+}
+
+bool StayFocus::isIgnored(HWND hwnd) const
+{
+    return d->ignore.contains(hwnd) || d->hwnd == hwnd || !d->focusing;
 }
 
 QList<DWORD> StayFocus::listWindowsThreads()

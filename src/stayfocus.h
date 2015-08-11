@@ -5,7 +5,7 @@
 #include <windows.h>
 
 class MainWindow;
-struct WindowEntry;
+struct HookEvent;
 
 class StayFocus : public QObject
 {
@@ -30,10 +30,11 @@ private:
     PrivData *d;
 
     void attachRemoteThreads(const QList<DWORD> &threads, bool attach);
+    bool isIgnored(HWND hwnd) const;
     QList<DWORD> listWindowsThreads();
 
 private slots:
-    void focus();
+    void snap(const HookEvent &event);
 };
 
 #endif
