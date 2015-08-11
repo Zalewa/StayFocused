@@ -17,7 +17,7 @@ public:
 
     bool isSet(T flags) const
     {
-        return this->flags & flags == flags;
+        return (this->flags & flags) == flags;
     }
 
     void set(T flags, bool set)
