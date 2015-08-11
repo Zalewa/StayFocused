@@ -4,6 +4,8 @@
 #include <QObject>
 #include <windows.h>
 
+struct HookEvent;
+
 namespace ActiveHwndTrackerCallback
 {
     void CALLBACK winEventProc(HWINEVENTHOOK hWinEventHook, DWORD event, HWND hwnd,
@@ -12,6 +14,8 @@ namespace ActiveHwndTrackerCallback
 
 class ActiveHwndTracker : public QObject
 {
+    Q_OBJECT;
+
 public:
     ActiveHwndTracker(QObject *parent = 0);
     ~ActiveHwndTracker();
@@ -22,14 +26,8 @@ private:
     class PrivData;
     PrivData *d;
 
-    void onHook(DWORD event, HWND hwnd, LONG idObject, LONG idChild,
-        DWORD dwEventThread, DWORD dwmsEventTime);
-
-    friend void ActiveHwndTrackerCallback::winEventProc(HWINEVENTHOOK hWinEventHook, DWORD event,
-        HWND hwnd, LONG idObject, LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime);
-
 private slots:
-    void snapshot();
+    void snapshot(const HookEvent &event);
 };
 
 #endif

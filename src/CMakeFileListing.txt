@@ -7,6 +7,7 @@ set(HEADER_FILES
 	flags.h
 	flagsmenu.h
 	flagspanel.h
+	hook.h
 	main.h
 	mainwindow.h
 	processlist.h
@@ -23,6 +24,7 @@ set(SOURCE_FILES
 	activehwndtracker.cpp
 	entrypoint.cpp
 	flagsmenu.cpp
+	hook.cpp
 	main.cpp
 	mainwindow.cpp
 	processlist.cpp
