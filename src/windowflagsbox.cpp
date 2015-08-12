@@ -9,7 +9,7 @@
 #include "windowflags.h"
 #include "ui_windowflagsbox.h"
 
-#define BAIL_ON_ERR(a) if (!a) { return; }
+#define BAIL_ON_ERR(a) if (!a) { return false; }
 
 class WindowFlagsBox::PrivData : public Ui::WindowFlagsBox
 {
@@ -64,8 +64,15 @@ void WindowFlagsBox::addFlagsBox(const QString &name, QWidget *box)
 
 void WindowFlagsBox::accept()
 {
+    apply();
+    reset();
+}
+
+bool WindowFlagsBox::apply()
+{
     BAIL_ON_ERR(applyStyle());
     BAIL_ON_ERR(applyExStyle());
+    return true;
 }
 
 bool WindowFlagsBox::applyStyle()

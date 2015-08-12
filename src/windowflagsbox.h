@@ -19,6 +19,7 @@ private:
     class PrivData;
     PrivData *d;
 
+    bool apply();
     bool applyErrorStatus();
     void addFlagsBox(const QString &name, QWidget *box);
 
