@@ -26,6 +26,7 @@ WindowFlagsBox::WindowFlagsBox(HWND hwnd, QWidget *parent)
     : QDialog(parent)
 {
     d = new PrivData();
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     d->setupUi(this);
     d->statusBar = new QStatusBar(this);
     d->statusBarLayout->addWidget(d->statusBar);
