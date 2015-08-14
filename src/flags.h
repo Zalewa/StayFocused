@@ -70,6 +70,16 @@ public:
         this->flags = flags;
     }
 
+    bool isSet(T flag) const
+    {
+        return flags.isSet(flag);
+    }
+
+    void set(T flag, bool set)
+    {
+        flags.set(flag, set);
+    }
+
     QString name(T flag) const
     {
         return names[flag];

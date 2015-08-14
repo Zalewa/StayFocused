@@ -30,6 +30,7 @@ WindowFlagsBox::WindowFlagsBox(HWND hwnd, QWidget *parent)
     d->statusBar = new QStatusBar(this);
     d->statusBarLayout->addWidget(d->statusBar);
     d->hwnd = hwnd;
+    d->showBox->setHwnd(hwnd);
 
     d->resetTimer.setInterval(200);
     this->connect(&d->resetTimer, SIGNAL(timeout()), SLOT(reset()));
@@ -72,6 +73,7 @@ bool WindowFlagsBox::apply()
 {
     BAIL_ON_ERR(applyStyle());
     BAIL_ON_ERR(applyExStyle());
+    d->showBox->apply();
     return true;
 }
 
@@ -120,6 +122,7 @@ void WindowFlagsBox::setImmediate(bool immediate)
     d->buttonBox->button(QDialogButtonBox::Reset)->setVisible(!immediate);
     d->buttonBox->button(QDialogButtonBox::Apply)->setVisible(!immediate);
     d->styleFlags->signal->blockSignals(!immediate);
+    d->showBox->setApplyImmediately(immediate);
     if (immediate)
     {
         d->resetTimer.start();
@@ -136,4 +139,5 @@ void WindowFlagsBox::reset()
     Window window(d->hwnd);
     d->styleFlags->setFlags(window.style().flags);
     d->exStyleFlags->setFlags(window.exStyle().flags);
+    d->showBox->reload();
 }

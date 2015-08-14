@@ -1,5 +1,6 @@
 set(UI_FILES
 	mainwindow.ui
+	showbox.ui
 	windowflagsbox.ui
 )
 set(HEADER_FILES
@@ -11,6 +12,7 @@ set(HEADER_FILES
 	main.h
 	mainwindow.h
 	processlist.h
+	showbox.h
 	stayfocus.h
 	styledef.h
 	trayicon.h
@@ -28,6 +30,7 @@ set(SOURCE_FILES
 	main.cpp
 	mainwindow.cpp
 	processlist.cpp
+	showbox.cpp
 	stayfocus.cpp
 	styledef.cpp
 	trayicon.cpp

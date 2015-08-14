@@ -2,6 +2,7 @@
 #define idc5e3acaf_e20b_42b2_9d79_4ea4879cbfbe
 
 #include <QMap>
+#include <QRect>
 #include <QString>
 #include <windows.h>
 #include "flags.h"
@@ -18,6 +19,15 @@ public:
 
     FlagSet<LONG> exStyle() const;
     void setExStyle(LONG flags);
+
+    void minimize();
+    void maximize();
+    void showNormal();
+
+    QRect rect() const;
+    void setRect(int x, int y, int width, int height);
+
+    void setTopmost(bool b);
 
 private:
     class PrivData;

@@ -48,3 +48,36 @@ void Window::setExStyle(LONG flags)
 {
     Winapi::setWindowLong(d->hwnd, GWL_EXSTYLE, flags);
 }
+
+void Window::minimize()
+{
+    ShowWindow(d->hwnd, SW_MINIMIZE);
+}
+
+void Window::maximize()
+{
+    ShowWindow(d->hwnd, SW_MAXIMIZE);
+}
+
+void Window::showNormal()
+{
+    ShowWindow(d->hwnd, SW_RESTORE);
+}
+
+QRect Window::rect() const
+{
+    RECT rect;
+    GetWindowRect(d->hwnd, &rect);
+    return QRect(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+}
+
+void Window::setRect(int x, int y, int width, int height)
+{
+    SetWindowPos(d->hwnd, d->hwnd, x, y, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
+}
+
+void Window::setTopmost(bool b)
+{
+    HWND position = b ? HWND_TOPMOST : HWND_NOTOPMOST;
+    SetWindowPos(d->hwnd, position, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+}
