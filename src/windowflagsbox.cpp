@@ -6,7 +6,7 @@
 #include <QTimer>
 #include "flagspanel.h"
 #include "styledef.h"
-#include "windowflags.h"
+#include "window.h"
 #include "ui_windowflagsbox.h"
 
 #define BAIL_ON_ERR(a) if (!a) { return false; }
@@ -77,8 +77,8 @@ bool WindowFlagsBox::apply()
 
 bool WindowFlagsBox::applyStyle()
 {
-    WindowFlags flags(d->hwnd);
-    flags.setStyle(d->styleFlags->flags());
+    Window window(d->hwnd);
+    window.setStyle(d->styleFlags->flags());
     bool ok = applyErrorStatus();
     if (d->immediate)
     {
@@ -89,8 +89,8 @@ bool WindowFlagsBox::applyStyle()
 
 bool WindowFlagsBox::applyExStyle()
 {
-    WindowFlags flags(d->hwnd);
-    flags.setExStyle(d->exStyleFlags->flags());
+    Window window(d->hwnd);
+    window.setExStyle(d->exStyleFlags->flags());
     bool ok = applyErrorStatus();
     if (d->immediate)
     {
@@ -133,7 +133,7 @@ void WindowFlagsBox::setImmediate(bool immediate)
 
 void WindowFlagsBox::reset()
 {
-    WindowFlags flags(d->hwnd);
-    d->styleFlags->setFlags(flags.style().flags);
-    d->exStyleFlags->setFlags(flags.exStyle().flags);
+    Window window(d->hwnd);
+    d->styleFlags->setFlags(window.style().flags);
+    d->exStyleFlags->setFlags(window.exStyle().flags);
 }

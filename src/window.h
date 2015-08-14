@@ -6,11 +6,11 @@
 #include <windows.h>
 #include "flags.h"
 
-class WindowFlags
+class Window
 {
 public:
-    WindowFlags(HWND hwnd);
-    ~WindowFlags();
+    Window(HWND hwnd);
+    ~Window();
 
     FlagSet<LONG> style() const;
     void setStyle(LONG flags);

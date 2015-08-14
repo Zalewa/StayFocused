@@ -17,7 +17,7 @@ set(HEADER_FILES
 	version.h
 	versiondefs.h
 	winapi.h
-	windowflags.h
+	window.h
 	windowflagsbox.h
 )
 set(SOURCE_FILES
@@ -33,6 +33,6 @@ set(SOURCE_FILES
 	trayicon.cpp
 	version.cpp
 	winapi.cpp
-	windowflags.cpp
+	window.cpp
 	windowflagsbox.cpp
 )

@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include "winapi.h"
-#include "windowflags.h"
+#include "window.h"
 
 class FlagsMenu::PrivData
 {
@@ -33,8 +33,8 @@ void FlagsMenu::setup()
 
 void FlagsMenu::setupStyleMenu()
 {
-    WindowFlags windowFlags(d->hwnd);
-    FlagSet<LONG> style = windowFlags.style();
+    Window window(d->hwnd);
+    FlagSet<LONG> style = window.style();
     QString error;
     if (GetLastError() != ERROR_SUCCESS)
     {
@@ -62,8 +62,8 @@ void FlagsMenu::setupStyleMenu()
 void FlagsMenu::onStyleActionTriggered(QAction *action)
 {
     LONG flag = static_cast<LONG>(action->data().toLongLong());
-    WindowFlags windowFlags(d->hwnd);
-    windowFlags.setStyleFlags(flag, action->isChecked());
+    Window window(d->hwnd);
+    window.setStyleFlags(flag, action->isChecked());
     if (GetLastError() != ERROR_SUCCESS)
     {
         QMessageBox::critical(parentWidget(), tr("Style set error"),
