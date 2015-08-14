@@ -15,13 +15,13 @@
 // - windows.rc
 
 // Info used by version.cpp
-#define VERSION_STRING "0.1-1"
+#define VERSION_STRING "1.0"
 
 // Info used by windows.rc
-#define FILEVERSION_DEF 0,1,0,1
-#define PRODUCTVERSION_DEF 0,1,0,1
-#define FILEVERSION_STR_DEF "0.1.0.1"
-#define PRODUCTVERSION_STR_DEF "0.1.0.1"
+#define FILEVERSION_DEF 1,0,0,0
+#define PRODUCTVERSION_DEF 1,0,0,0
+#define FILEVERSION_STR_DEF "1.0.0.0"
+#define PRODUCTVERSION_STR_DEF "1.0.0.0"
 #define LEGALCOPYRIGHT_DEF "Zalewa 2015"
 
 #endif
