@@ -21,11 +21,16 @@ QString errorMessage(int error)
     return QString::fromUtf8(msg, size);
 }
 
+static BOOL CALLBACK snapshotCallback(HWND hwnd, LPARAM lparam)
+{
+	snapshotHwnd << hwnd;
+	return 1;
+}
+
 QList<HWND> snapshotWindows()
 {
     snapshotHwnd.clear();
-    auto callback = [](HWND hwnd, LPARAM lparam) -> BOOL { snapshotHwnd << hwnd; return 1; };
-    EnumWindows(callback, 0);
+    EnumWindows(snapshotCallback, 0);
     return snapshotHwnd;
 }
 

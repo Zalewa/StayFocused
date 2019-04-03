@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QString>
 #include <QWidget>
+#include <QVariant>
 #include <QVBoxLayout>
 
 
@@ -36,7 +37,7 @@ public:
         foreach (T key, names.keys())
         {
             QCheckBox *checkBox = new QCheckBox(names[key], this);
-            checkBox->setProperty("flag", key);
+            checkBox->setProperty("flag", static_cast<int32_t>(key));
             signal->connect(checkBox, SIGNAL(clicked()), SIGNAL(changed()));
             layout->addWidget(checkBox);
         }

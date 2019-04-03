@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <QMessageBox>
+#include <QVariant>
 #include "winapi.h"
 #include "window.h"
 
@@ -48,7 +49,7 @@ void FlagsMenu::setupStyleMenu()
         foreach (LONG flag, style.names.keys())
         {
             QAction *action = styleMenu->addAction(style.name(flag));
-            action->setData(flag);
+            action->setData(QVariant(static_cast<int32_t>(flag)));
             action->setCheckable(true);
             action->setChecked(style.flags.isSet(flag));
         }
